@@ -18,18 +18,18 @@ abstract = paper["abstract"]
 topic = paper["topic"]
 date_str = datetime.date.today().isoformat()
 
-# === Load Hugging Face model ===
+
 print("🔧 Loading simplification model...")
-simplifier = pipeline("text2text-generation", model="pszemraj/t5-large-eli5")
+simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
 
 # === Generate simplified version ===
 print("🪄 Simplifying abstract...")
 prompt = (
-    f"Explain the following academic abstract in a clear, friendly way, as if you were talking to a curious friend who doesn't know anything about AI or science. "
-    f"Break it into short, readable paragraphs. Use plain language and keep it engaging. "
-    f"The explanation should start with a capital letter and end with a full stop:\n\n{abstract}"
+    f"Explain this academic abstract to a curious friend who knows nothing about AI. "
+    f"Use simple, clear language. Keep it engaging and easy to follow. "
+    f"Start with a capital letter and end with a full stop.\n\n{abstract}"
 )
-simplified = simplifier(prompt, max_length=1000)[0]['generated_text']
+simplified = simplifier(prompt, max_length=1000, do_sample=False)[0]['generated_text']
 
 # === Determine paper URL ===
 doi = paper.get("doi")
@@ -69,7 +69,7 @@ categories: ["AI", "{topic}"]
 ### 🔗 [Read the full paper]({url})
 
 ### 🧪 Model Notes
-Simplified using `pszemraj/t5-large-eli5`.
+Simplified using `google/flan-t5-large`.
 """
 
 # === Save post ===
