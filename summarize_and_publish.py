@@ -20,15 +20,16 @@ date_str = datetime.date.today().isoformat()
 
 # === Load Hugging Face model ===
 print("🔧 Loading simplification model...")
-simplifier = pipeline("text2text-generation", model="t5-small")
+simplifier = pipeline("text2text-generation", model="pszemraj/t5-large-eli5")
 
 # === Generate simplified version ===
 print("🪄 Simplifying abstract...")
 prompt = (
-    f"Explain this academic abstract like you're telling a curious friend who doesn't know anything about AI. "
-    f"Use simple language, keep it lively and interesting, and make it easy to follow:\n\n{abstract}"
+    f"Explain the following academic abstract in a clear, friendly way, as if you were talking to a curious friend who doesn't know anything about AI or science. "
+    f"Break it into short, readable paragraphs. Use plain language and keep it engaging. "
+    f"The explanation should start with a capital letter and end with a full stop:\n\n{abstract}"
 )
-simplified = simplifier(prompt, max_length=200)[0]['generated_text']
+simplified = simplifier(prompt, max_length=1000)[0]['generated_text']
 
 # === Determine paper URL ===
 doi = paper.get("doi")
@@ -68,7 +69,7 @@ categories: ["AI", "{topic}"]
 ### 🔗 [Read the full paper]({url})
 
 ### 🧪 Model Notes
-Simplified using `t5-small`.
+Simplified using `pszemraj/t5-large-eli5`.
 """
 
 # === Save post ===
