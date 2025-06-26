@@ -19,7 +19,7 @@ jobs:
           python-version: 3.12
 
       - name: Install dependencies
-        run: pip install requests
+        run: pip install -r requirements.txt
 
       - name: Run fetch script
         run: python fetch_paper.py
@@ -50,7 +50,7 @@ jobs:
           python-version: 3.12
 
       - name: Install dependencies
-        run: pip install transformers torch requests
+        run: pip install -r requirements.txt
 
       - name: Run summarize script
         run: python summarize_and_publish.py
@@ -80,6 +80,5 @@ jobs:
           GIT_AUTHOR_EMAIL: github-actions@github.com
           GIT_COMMITTER_NAME: github-actions
           GIT_COMMITTER_EMAIL: github-actions@github.com
-          # Use the secret token
           GH_TOKEN: ${{ secrets.BLOG_PAT }}
         shell: bash
