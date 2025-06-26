@@ -5,7 +5,7 @@ from transformers import pipeline
 
 # === CONFIG ===
 INPUT_PATH = Path("paper_to_summarize.json")
-POSTS_DIR = Path("../data-blog/posts")
+POSTS_DIR = Path("data-blog/posts")
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # === Load paper ===
