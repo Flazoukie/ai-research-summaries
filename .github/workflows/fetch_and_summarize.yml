@@ -32,7 +32,7 @@ jobs:
 
   summarize:
     needs: fetch
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Checkout repo
@@ -59,4 +59,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ai-post
-          path: ../data-blog/posts/*.qmd
+          path: data-blog/posts/*.qmd
+
+
