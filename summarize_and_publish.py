@@ -18,18 +18,17 @@ abstract = paper["abstract"]
 topic = paper["topic"]
 date_str = datetime.date.today().isoformat()
 
-# === Load Hugging Face models ===
-print("🔧 Loading models...")
-summarizer = pipeline("summarization", model="google/pegasus-cnn_dailymail")
-simplifier = pipeline("text2text-generation", model="mrm8488/t5-base-finetuned-simple-summarization")
+# === Load Hugging Face model ===
+print("🔧 Loading simplification model...")
+simplifier = pipeline("text2text-generation", model="t5-small")
 
-# === Generate summary and simplified version ===
-print("🧠 Summarizing abstract...")
-summary = summarizer(abstract, max_length=130, min_length=30, do_sample=False)[0]['summary_text']
-
-print("🪄 Simplifying summary...")
-prompt = f"Simplify this for someone without AI knowledge: {summary}"
-simplified = simplifier(prompt, max_length=100)[0]['generated_text']
+# === Generate simplified version ===
+print("🪄 Simplifying abstract...")
+prompt = (
+    f"Explain this academic abstract like you're telling a curious friend who doesn't know anything about AI. "
+    f"Use simple language, keep it lively and interesting, and make it easy to follow:\n\n{abstract}"
+)
+simplified = simplifier(prompt, max_length=200)[0]['generated_text']
 
 # === Determine paper URL ===
 doi = paper.get("doi")
@@ -69,7 +68,7 @@ categories: ["AI", "{topic}"]
 ### 🔗 [Read the full paper]({url})
 
 ### 🧪 Model Notes
-Summarized with `facebook/bart-large-cnn` and simplified using `t5-small`.
+Simplified using `t5-small`.
 """
 
 # === Save post ===
