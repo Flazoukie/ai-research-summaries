@@ -26,11 +26,12 @@ simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
 # === Generate simplified version ===
 print("🪄 Simplifying abstract...")
 prompt = (
-    f"Explain this academic abstract to a curious friend who knows nothing about AI or inventory management. "
+    f"Explain this academic abstract to a curious friend who knows nothing about AI or medical imaging. "
     f"Use simple, clear language and keep it engaging and easy to follow. "
-    f"Briefly explain any technical terms like EOQ, ANN, or MSE in simple words. "
-    f"Round numbers and percentages to whole numbers for easier understanding. "
-    f"Try to put savings or improvements in a relatable way (for example, 'saving tens of thousands of Rupiah'). "
+    f"Briefly explain any technical terms like Auto-Encoder, Swin Transformer, or Accuracy in simple words. "
+    f"Round numbers and percentages for easier understanding. "
+    f"Try to put improvements in a relatable way (for example, 'almost perfect accuracy'). "
+    f"Avoid using 'we' or 'I' — write in third person, as you're describing someone else's work. "
     f"Start with a capital letter and end with a full stop.\n\n{abstract}"
 )
 
@@ -41,7 +42,7 @@ doi = paper.get("doi")
 url = f"https://doi.org/{doi}" if doi else paper["id"].replace("https://openalex.org/", "https://doi.org/")
 
 # === Generate post content ===
-slug = f"{date_str}-ai-summary"
+slug = f"{date_str}-paper-summary"
 post_path = POSTS_DIR / f"{slug}.qmd"
 
 # Clean up abstract HTML entities (e.g. &lt;, &gt;, &amp;)
@@ -59,9 +60,9 @@ categories: ["{topic}"]
 
 ### 🧠 Topic: {topic}
 
-**Paper**: [{title}]({url})  
-**Authors**: {authors}  
-**Published**: {paper.get('publication_date', 'unknown')}
+Paper: [{title}]({url})  
+{"Authors: " + authors + "  " if authors else ""}Published in Journal: {paper.get('publication_date', 'unknown')}
+Published: {paper.get('publication_date', 'unknown')}
 
 ---
 
