@@ -2,6 +2,7 @@ import json
 import datetime
 from pathlib import Path
 from transformers import pipeline
+import html 
 
 # === CONFIG ===
 INPUT_PATH = Path("paper_to_summarize.json")
@@ -38,6 +39,9 @@ url = f"https://doi.org/{doi}" if doi else paper["id"].replace("https://openalex
 slug = f"{date_str}-ai-summary"
 post_path = POSTS_DIR / f"{slug}.qmd"
 
+# Clean up abstract HTML entities (e.g. &lt;, &gt;, &amp;)
+abstract_clean = html.unescape(abstract.strip())
+
 content = f"""
 ---
 title: "AI Paper of the Week: {title}"
@@ -52,18 +56,21 @@ categories: ["AI", "{topic}"]
 
 ---
 
-### TL;DR (Technical Summary)
-{summary.strip()}
-
 ### 🪄 Explained Simply
 {simplified.strip()}
+
+---
+
+### 📄 Full Abstract
+{abstract_clean}
+
+---
 
 ### 🔗 [Read the full paper]({url})
 
 ### 🧪 Model Notes
 Summarized with `facebook/bart-large-cnn` and simplified using `t5-small`.
 """
-
 
 # === Save post ===
 post_path.write_text(content.strip())
