@@ -27,12 +27,12 @@ simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
 # === Generate simplified version ===
 print("🪄 Simplifying abstract...")
 prompt = (
-    f"Summarize the following academic abstract for a curious reader with no technical background. "
-    f"Explain the problem the paper addresses, what solution or method it proposes, and why it matters. "
-    f"Use clear, simple language and avoid jargon. If any technical terms appear, explain them in plain words. "
-    f"Write at least one full paragraph (5 to 8 sentences) to give a complete and engaging summary. "
-    f"Do not use 'we' or 'I'; describe the research in the third person. "
-    f"Round off numbers for readability, and avoid overly short or vague summaries. "
+    f"Rewrite the following academic abstract in plain, clear language for a curious reader without technical knowledge. "
+    f"Start by explaining what the research is about and why it matters. Then describe how the researchers approached the problem and what they found. "
+    f"Avoid technical jargon, and explain any complex terms in simple words. Break down long sentences. "
+    f"Use 5–8 concise sentences. Use a friendly and informative tone, like you're explaining to a smart high school student. "
+    f"Don't use 'we' or 'I' — describe the research in third person. "
+    f"Round off numbers and include real-world context if possible. "
     f"Start with a capital letter and end with a full stop.\n\n{abstract}"
 )
 
