@@ -1,0 +1,33 @@
+name: Summarize AI Paper
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Test Fetch AI Paper"]  # or name of fetch workflow
+    types:
+      - completed
+
+jobs:
+  summarize:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout AI summary repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install transformers torch requests
+
+      - name: Run summarizer
+        run: python summarize_and_publish.py
+
+      - name: Upload generated post
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-post
+          path: ../data-blog/posts/*.qmd
