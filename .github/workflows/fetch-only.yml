@@ -2,10 +2,6 @@ name: Fetch AI Paper
 
 on:
   workflow_dispatch:  # manual trigger
-  workflow_run:
-    workflows: ["Fetch AI Paper"]  # exact name of your first workflow
-    types:
-      - completed
 
 jobs:
   fetch-ai-paper:
