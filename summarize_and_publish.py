@@ -15,7 +15,11 @@ with open(INPUT_PATH) as f:
     paper = json.load(f)
 
 title = paper["title"]
-authors = ", ".join(a["author"]["display_name"] for a in paper.get("authorships", []))
+authors = ", ".join(
+    a["author"].get("display_name", "Unknown")
+    for a in paper.get("authorships", [])
+    if a.get("author") and a["author"].get("display_name")
+)
 abstract = paper["abstract"]
 topic = paper["topic"]
 journal_date = paper.get("publication_date", "unknown")
@@ -28,11 +32,12 @@ simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
 print("🪄 Simplifying abstract...")
 prompt = (
     f"Rewrite the following academic abstract in plain, clear language for a curious reader without technical knowledge. "
-    f"Start by explaining what the research is about and why it matters. Then describe how the researchers approached the problem and what they found. "
-    f"Avoid technical jargon, and explain any complex terms in simple words. Break down long sentences. "
-    f"Use 5–8 concise sentences. Use a friendly and informative tone, like you're explaining to a smart high school student. "
-    f"Don't use 'we' or 'I' — describe the research in third person. "
-    f"Round off numbers and include real-world context if possible. "
+    f"Start by briefly stating what the research is about and why it matters in the real world. "
+    f"Then explain the approach and key findings. "
+    f"Avoid jargon, explain complex terms in simple words, and break down long sentences. "
+    f"Use 5 to 8 engaging and informative sentences, written like you're talking to a smart high school student. "
+    f"Write in third person only — no 'we' or 'I'. "
+    f"Round off numbers and include real-world context where possible. "
     f"Start with a capital letter and end with a full stop.\n\n{abstract}"
 )
 
@@ -54,8 +59,7 @@ abstract_clean = re.sub(r'\*\*', r'\\*\\*', abstract_clean)
 
 content = f"""
 ---
-title: "Paper of the Week"
-subtitle: "{title}"
+title: "Paper of the Week: {title}"
 date: {post_date}
 categories: ["{topic}"]
 ---
