@@ -66,8 +66,9 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "github-actions@github.com"
 
-          # Clone target repo
-          git clone https://github.com/Flazoukie/data-blog.git target_repo
+          # Clone using PAT for authentication
+          git clone https://x-access-token:${{ secrets.BLOG_PAT }}@github.com/Flazoukie/data-blog.git target_repo
+
           cp data-blog/posts/*.qmd target_repo/posts/
 
           cd target_repo
