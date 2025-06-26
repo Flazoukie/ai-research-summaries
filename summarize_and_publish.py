@@ -21,7 +21,7 @@ date_str = datetime.date.today().isoformat()
 # === Load Hugging Face models ===
 print("🔧 Loading models...")
 summarizer = pipeline("summarization", model="google/pegasus-cnn_dailymail")
-simplifier = pipeline("text2text-generation", model="csebuetnlp/t5-small-text-simplification")
+simplifier = pipeline("text2text-generation", model="mrm8488/t5-base-finetuned-simple-summarization")
 
 # === Generate summary and simplified version ===
 print("🧠 Summarizing abstract...")
