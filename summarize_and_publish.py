@@ -27,13 +27,12 @@ simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
 # === Generate simplified version ===
 print("🪄 Simplifying abstract...")
 prompt = (
-    f"Explain this academic abstract to a curious friend who does not have technical knowledge of the subject. "
-    f"Use simple, clear language and keep it engaging and easy to follow. "
-    f"Briefly explain any technical terms like Auto-Encoder, Swin Transformer, or Accuracy in simple words. "
-    f"Round numbers and percentages for easier understanding. "
-    f"Try to put improvements in a relatable way (for example, 'almost perfect accuracy'). "
-    f"Avoid using 'we' or 'I' — write in third person, as you're describing someone else's work. "
-    f"Ensure the explanation is sufficiently detailed, not overly short. "
+    f"Summarize the following academic abstract for a curious reader with no technical background. "
+    f"Explain the problem the paper addresses, what solution or method it proposes, and why it matters. "
+    f"Use clear, simple language and avoid jargon. If any technical terms appear, explain them in plain words. "
+    f"Write at least one full paragraph (5 to 8 sentences) to give a complete and engaging summary. "
+    f"Do not use 'we' or 'I'; describe the research in the third person. "
+    f"Round off numbers for readability, and avoid overly short or vague summaries. "
     f"Start with a capital letter and end with a full stop.\n\n{abstract}"
 )
 
@@ -63,8 +62,8 @@ categories: ["{topic}"]
 
 ### 🧠 Topic: {topic}
 
-**Authors**: {authors if authors else 'Unknown'}  
-**Published in journal**: {journal_date}  
+Authors: {authors if authors else 'Unknown'}  
+Published in journal: {journal_date}  
 
 ---
 
