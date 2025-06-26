@@ -3,7 +3,7 @@ name: Summarize AI Paper
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Test Fetch AI Paper"]  # or name of fetch workflow
+    workflows: ["Fetch AI Paper"]  # or name of fetch workflow
     types:
       - completed
 
