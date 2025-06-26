@@ -1,0 +1,34 @@
+name: Test fetch_paper.py
+
+on:
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  fetch-paper:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Run fetch_paper.py
+        run: python fetch_paper.py
+
+      - name: Show output file (if created)
+        if: success()
+        run: |
+          if [ -f "paper_to_summarize.json" ]; then
+            echo "✅ paper_to_summarize.json created:"
+            cat paper_to_summarize.json
+          else
+            echo "❌ No paper found."
+          fi
