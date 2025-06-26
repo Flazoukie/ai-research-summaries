@@ -20,8 +20,8 @@ date_str = datetime.date.today().isoformat()
 
 # === Load Hugging Face models ===
 print("🔧 Loading models...")
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn")
-simplifier = pipeline("text2text-generation", model="t5-small")
+summarizer = pipeline("summarization", model="google/pegasus-cnn_dailymail")
+simplifier = pipeline("text2text-generation", model="csebuetnlp/t5-small-text-simplification")
 
 # === Generate summary and simplified version ===
 print("🧠 Summarizing abstract...")
