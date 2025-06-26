@@ -2,6 +2,8 @@ import requests
 import datetime
 import random
 import json
+import html
+import re
 from pathlib import Path
 
 # === CONFIG ===
@@ -40,11 +42,15 @@ def filter_valid_papers(papers):
 
 def decode_abstract(index):
     """Decode OpenAlex abstract_inverted_index to plain text."""
-    if not index:
-        return ""
     words_with_pos = [(pos, word) for word, positions in index.items() for pos in positions]
     sorted_words = sorted(words_with_pos)
     return " ".join(word for _, word in sorted_words)
+
+def clean_abstract(raw_text):
+    """Unescape HTML entities and strip tags from abstract."""
+    unescaped = html.unescape(raw_text)
+    plain = re.sub(r"<.*?>", "", unescaped)
+    return plain.strip()
 
 # === MAIN LOGIC ===
 def main():
@@ -59,7 +65,9 @@ def main():
 
         selected = random.choice(valid)
         selected["topic"] = topic["name"]
-        selected["abstract"] = decode_abstract(selected["abstract_inverted_index"])
+
+        abstract_raw = decode_abstract(selected["abstract_inverted_index"])
+        selected["abstract"] = clean_abstract(abstract_raw)
 
         OUTPUT_PATH.write_text(json.dumps(selected, indent=2))
         print(f"✅ Paper saved to {OUTPUT_PATH} for topic '{topic['name']}': {selected['title']}")
