@@ -1,14 +1,14 @@
-name: Test fetch_paper.py
+name: Test Fetch AI Paper
 
 on:
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:  # Manual trigger
 
 jobs:
-  fetch-paper:
+  fetch-ai-paper:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -17,18 +17,19 @@ jobs:
           python-version: "3.10"
 
       - name: Install dependencies
-        run: |
-          pip install requests
+        run: pip install requests
 
       - name: Run fetch_paper.py
         run: python fetch_paper.py
 
-      - name: Show output file (if created)
-        if: success()
+      - name: Show paper content
         run: |
-          if [ -f "paper_to_summarize.json" ]; then
-            echo "✅ paper_to_summarize.json created:"
-            cat paper_to_summarize.json
-          else
-            echo "❌ No paper found."
-          fi
+          echo "📄 paper_to_summarize.json:"
+          cat paper_to_summarize.json
+
+      - name: Upload paper as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: paper_to_summarize.json
+
