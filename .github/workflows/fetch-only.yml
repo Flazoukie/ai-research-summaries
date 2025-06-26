@@ -1,4 +1,4 @@
-name: Test Fetch AI Paper
+name: Fetch AI Paper
 
 on:
   workflow_dispatch:  # Manual trigger
