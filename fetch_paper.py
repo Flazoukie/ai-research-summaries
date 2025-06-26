@@ -36,7 +36,15 @@ def fetch_papers(concept_id):
     return r.json().get("results", [])
 
 def filter_valid_papers(papers):
-    return [p for p in papers if p.get("abstract")]
+    return [p for p in papers if "abstract_inverted_index" in p]
+
+def decode_abstract(index):
+    """Decode OpenAlex abstract_inverted_index to plain text."""
+    if not index:
+        return ""
+    words_with_pos = [(pos, word) for word, positions in index.items() for pos in positions]
+    sorted_words = sorted(words_with_pos)
+    return " ".join(word for _, word in sorted_words)
 
 # === MAIN LOGIC ===
 def main():
@@ -51,11 +59,17 @@ def main():
 
         selected = random.choice(valid)
         selected["topic"] = topic["name"]
+        selected["abstract"] = decode_abstract(selected["abstract_inverted_index"])
+
         OUTPUT_PATH.write_text(json.dumps(selected, indent=2))
         print(f"✅ Paper saved to {OUTPUT_PATH} for topic '{topic['name']}': {selected['title']}")
         return
 
     print("❌ No new valid papers found for any topic.")
+
+if __name__ == "__main__":
+    main()
+
 
 if __name__ == "__main__":
     main()
