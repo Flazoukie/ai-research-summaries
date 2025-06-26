@@ -1,7 +1,7 @@
 name: Fetch AI Paper
 
 on:
-  workflow_dispatch:  # manual trigger
+  workflow_dispatch:  # Manual trigger
 
 jobs:
   fetch-ai-paper:
@@ -32,4 +32,5 @@ jobs:
         with:
           name: paper
           path: paper_to_summarize.json
+
 
