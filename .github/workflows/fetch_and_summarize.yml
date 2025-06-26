@@ -1,65 +1,62 @@
-import json
-import datetime
-from pathlib import Path
-from transformers import pipeline
-import torch
+name: Fetch and Summarize AI Paper
 
-# === CONFIG ===
-INPUT_PATH = "paper_to_summarize.json"
-POSTS_DIR = Path("data-blog/posts")  # ✅ Updated path to be inside repo
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 6 * * 5'  # Every Friday at 08:00 CET (06:00 UTC)
 
-# === STEP 1: Load Paper Info ===
-with open(INPUT_PATH) as f:
-    paper = json.load(f)
+jobs:
+  fetch:
+    runs-on: ubuntu-22.04
 
-# === STEP 2: Load Models ===
-device = 0 if torch.cuda.is_available() else -1
-print(f"Device set to use {'cuda' if device == 0 else 'cpu'}")
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-print("🔧 Loading models...")
-summarizer = pipeline("summarization", model="facebook/bart-large-cnn", device=device)
-simplifier = pipeline("text2text-generation", model="t5-small", device=device)
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
 
-# === STEP 3: Generate Summary and Simplification ===
-print("🧠 Summarizing abstract...")
-abstract = paper.get("abstract", "")
-summary = summarizer(abstract, max_length=130, min_length=30, do_sample=False)[0]["summary_text"]
+      - name: Install dependencies
+        run: pip install requests
 
-print("🪄 Simplifying summary...")
-prompt = f"Simplify this for someone without AI knowledge: {summary}"
-simplified = simplifier(prompt, max_length=100)[0]["generated_text"]
+      - name: Run fetch script
+        run: python fetch_paper.py
 
-# === STEP 4: Create .qmd Blog Post ===
-POSTS_DIR.mkdir(parents=True, exist_ok=True)
-date_str = datetime.date.today().isoformat()
-slug = f"{date_str}-ai-summary"
-title = paper["title"]
-doi_url = paper.get("doi")
-url = "https://doi.org/" + doi_url if doi_url else paper["id"].replace("https://openalex.org/", "https://doi.org/")
+      - name: Upload paper artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: paper
+          path: paper_to_summarize.json
 
-content = f"""
----
-title: "AI Paper of the Week: {title}"
-date: {date_str}
-categories: ["AI", "{paper.get('concept', 'AI')}"]
----
+  summarize:
+    needs: fetch
+    runs-on: ubuntu-22.04
 
-### 🧠 Topic of the Week: {paper.get('concept', 'AI')}
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
-**Paper**: [{title}]({url})  
-**Published**: {paper.get('publication_date', 'unknown')}
+      - name: Download paper artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: paper
+          path: .
 
----
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
 
-### TL;DR (Technical Summary)
-{summary}
+      - name: Install dependencies
+        run: pip install transformers torch requests
 
-### 🪄 Explained Simply
-{simplified}
+      - name: Run summarize script
+        run: python summarize_and_publish.py
 
-### 🔗 [Read the full paper]({url})
-"""
-
-post_path = POSTS_DIR / f"{slug}.qmd"
-post_path.write_text(content.strip())
-print(f"✅ Blog post created at {post_path}")
+      - name: Upload generated post artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-post
+          path: data-blog/posts/*.qmd
