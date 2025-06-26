@@ -59,7 +59,11 @@ categories: ["AI", "{topic}"]
 {simplified.strip()}
 
 ### 🔗 [Read the full paper]({url})
+
+### 🧪 Model Notes
+Summarized with `facebook/bart-large-cnn` and simplified using `t5-small`.
 """
+
 
 # === Save post ===
 post_path.write_text(content.strip())
