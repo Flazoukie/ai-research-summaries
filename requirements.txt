@@ -1,3 +1,6 @@
 transformers
 torch
 requests
+protobuf
+sentencepiece
+html5lib
