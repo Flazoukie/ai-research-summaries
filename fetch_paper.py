@@ -5,8 +5,9 @@ import json
 from pathlib import Path
 
 # === CONFIG ===
+# === CONFIG ===
 NUM_MONTHS = 6
-POSTS_DIR = Path("posts")
+POSTS_DIR = Path("data-blog/posts")  
 
 
 def get_from_date():
