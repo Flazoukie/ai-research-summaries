@@ -42,8 +42,10 @@ def summarize_text(text):
         json={
             "inputs": summary_prompt,
             "parameters": {
-                "temperature": 0.5,
-                "max_new_tokens": 200,
+                "temperature": 0.4,
+                "max_new_tokens": 400,
+                "top_p": 0.9,
+                "repetition_penalty": 1.1,
                 "return_full_text": False
             }
         },
@@ -76,7 +78,6 @@ prompt = (
     "Here is the abstract:\n\n"
     f"{abstract_for_prompt}"
 )
-
 
 response = requests.post(
     f"https://api-inference.huggingface.co/models/{MODEL}",
