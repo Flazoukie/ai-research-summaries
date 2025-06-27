@@ -89,7 +89,7 @@ Published in journal: {journal_date}
 
 ---
 
-### 📄 Full Abstract
+### 📄 Original Abstract
 {abstract_clean}
 
 ---
