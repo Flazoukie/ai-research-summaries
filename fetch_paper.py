@@ -6,12 +6,12 @@ from pathlib import Path
 
 # === CONFIG ===
 TOPICS = [
-    {"name": "Artificial Intelligence", "id": "https://openalex.org/C154945302"},
-    {"name": "Machine Learning", "id": "https://openalex.org/C119857082"},
-    {"name": "Natural Language Processing", "id": "https://openalex.org/C204321447"},
-    {"name": "Data Science", "id": "https://openalex.org/C2522767166"},
-    {"name": "Human–Computer Interaction", "id": "https://openalex.org/C107457646"},
-    {"name": "Computer Vision", "id": "https://openalex.org/C31972630"},
+    "https://openalex.org/C154945302",  # Artificial intelligence
+    "https://openalex.org/C119857082",  # Machine learning
+    "https://openalex.org/C204321447",  # Natural language processing
+    "https://openalex.org/C2522767166",  # Data science
+    "https://openalex.org/C107457646",  # Human–computer interaction
+    "https://openalex.org/C31972630",   # Computer vision
 ]
 
 NUM_MONTHS = 6
@@ -56,11 +56,18 @@ def fetch_papers_for_topic(topic_id):
     return response.json().get("results", [])
 
 
-def main():
-    for topic in TOPICS:
-        print(f"🔍 Trying topic: {topic['name']}")
+def get_display_topic(concepts):
+    for c in concepts:
+        if c["id"] in TOPICS:
+            return c["display_name"]
+    return None
 
-        papers = fetch_papers_for_topic(topic["id"])
+
+def main():
+    for topic_id in TOPICS:
+        print(f"🔍 Trying topic: {topic_id}")
+
+        papers = fetch_papers_for_topic(topic_id)
 
         # Filter papers that have abstract_inverted_index and are not published
         valid_papers = []
@@ -71,17 +78,19 @@ def main():
                 valid_papers.append(p)
 
         if not valid_papers:
-            print(f"⚠️ No valid papers with abstracts found for topic '{topic['name']}', trying next.")
+            print(f"⚠️ No valid papers with abstracts found for topic '{topic_id}', trying next.")
             continue
 
         selected = random.choice(valid_papers)
+        display_topic = get_display_topic(selected.get("concepts", []))
+
         paper_data = {
             "title": selected["title"],
             "abstract": selected["decoded_abstract"],
             "doi": selected.get("doi"),
             "id": selected["id"],
             "publication_date": selected.get("publication_date"),
-            "topic": topic["name"],
+            "topic": display_topic or "Unknown",
             "authorships": selected.get("authorships", [])
         }
 
@@ -89,15 +98,10 @@ def main():
         with open("paper_to_summarize.json", "w", encoding="utf-8") as f:
             json.dump(paper_data, f, ensure_ascii=False, indent=2)
 
-        print(f"✅ Paper saved to paper_to_summarize.json for topic '{topic['name']}': {paper_data['title']}")
+        print(f"✅ Paper saved to paper_to_summarize.json for topic '{display_topic}': {paper_data['title']}")
         return  # stop after first valid paper found
 
     print("❌ No new valid papers found for any topic.")
-
-
-if __name__ == "__main__":
-    main()
-
 
 
 if __name__ == "__main__":
