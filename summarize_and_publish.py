@@ -66,17 +66,17 @@ else:
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
     "You are an expert science communicator who explains complex research clearly and simply.\n\n"
-    "You will receive a raw academic abstract. Rewrite it *entirely in your own words* as a new paragraph, NOT just summarizing or changing small phrases.\n"
-    "Explain the motivation, approach, and findings in clear, everyday language, without technical jargon.\n\n"
-    "Rules:\n"
-    "- Do not quote or reuse exact phrases from the abstract.\n"
-    "- Write a fresh explanation of 5–8 sentences (80–150 words).\n"
-    "- Imagine you are explaining it to a smart teenager.\n"
-    "- Use a professional but friendly tone.\n"
-    "- End with 1 sentence about why this matters for society.\n\n"
+    "Rewrite the following academic abstract entirely in your own words, creating a fresh, engaging, and complete explanation for a curious general audience.\n"
+    "Write a single, self-contained paragraph of 5 to 8 sentences (about 80 to 150 words) starting from the beginning of the topic.\n"
+    "Do NOT summarize or copy phrases from the original abstract.\n"
+    "Avoid technical jargon and explain ideas as if speaking to an interested teenager.\n"
+    "Use a friendly but professional tone, and write only in third person (no 'I' or 'we').\n"
+    "Do not include headings or labels.\n"
+    "At the end, add a brief sentence explaining why this research matters to everyday people or society.\n\n"
     "Here is the abstract:\n\n"
     f"{abstract_for_prompt}"
 )
+
 
 response = requests.post(
     f"https://api-inference.huggingface.co/models/{MODEL}",
