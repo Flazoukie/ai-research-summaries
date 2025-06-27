@@ -42,7 +42,7 @@ prompt = (
     "6. Use a natural, friendly tone but maintain professionalism.\n"
     "7. Write only in third person (no 'I' or 'we').\n"
     "8. Do not repeat ideas or phrases unnecessarily; be clear and to the point.\n"
-    "9. Do not include any headings, labels, or phrases like 'Summary:' or 'Abstract:'. Just provide the explanation.\n"
+    "9. Do NOT include any headings, labels, or introductory words like 'Explanation:' or 'Summary:'. Just provide the explanation directly.\n"
     "10. Add a brief sentence about why this research matters to everyday people or society.\n\n"
     "Here is the abstract to rewrite:\n\n"
     f"{abstract.strip()}"
