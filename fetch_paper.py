@@ -3,6 +3,7 @@ import datetime
 import random
 import json
 from pathlib import Path
+import re
 
 # === CONFIG ===
 TOPIC_ID = "https://openalex.org/C154945302"  # Artificial intelligence
@@ -49,11 +50,13 @@ def fetch_papers_for_topic(topic_id):
 
 
 def matches_ai_keywords(title, abstract):
+    title_lower = title.lower()
+    abstract_lower = abstract.lower()
     return (
-        "artificial intelligence" in title.lower()
-        or "artificial intelligence" in abstract.lower()
-        or "AI" in title
-        or "AI" in abstract
+        "artificial intelligence" in title_lower
+        or "artificial intelligence" in abstract_lower
+        or re.search(r"\bAI\b", title)
+        or re.search(r"\bAI\b", abstract)
     )
 
 
@@ -98,3 +101,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
