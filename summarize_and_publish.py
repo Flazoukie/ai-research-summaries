@@ -1,7 +1,8 @@
 import json
 import datetime
+import os
 from pathlib import Path
-from transformers import pipeline
+import requests
 import html
 import re
 
@@ -9,6 +10,8 @@ import re
 INPUT_PATH = Path("paper_to_summarize.json")
 POSTS_DIR = Path("data-blog/posts")
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
+HF_API_TOKEN = os.getenv("HF_API_TOKEN")
+MODEL = "HuggingFaceH4/zephyr-7b-beta"  # or use "mistralai/Mistral-7B-Instruct-v0.2"
 
 # === Load paper ===
 with open(INPUT_PATH) as f:
@@ -25,11 +28,8 @@ topic = paper["topic"]
 journal_date = paper.get("publication_date", "unknown")
 post_date = datetime.date.today().isoformat()
 
-print("🔧 Loading simplification model...")
-simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
-
 # === Generate simplified version ===
-print("🪄 Simplifying abstract...")
+print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
     "You are a science writer skilled at explaining complex ideas to curious non-experts.\n\n"
     "Your task is to rewrite the following academic abstract into a short, engaging, and easy-to-understand explanation for a general audience.\n\n"
@@ -46,8 +46,14 @@ prompt = (
     f"{abstract.strip()}"
 )
 
-
-simplified = simplifier(prompt, max_length=1000, do_sample=True, temperature=0.7)[0]['generated_text']
+response = requests.post(
+    f"https://api-inference.huggingface.co/models/{MODEL}",
+    headers={"Authorization": f"Bearer {HF_API_TOKEN}"},
+    json={"inputs": prompt, "parameters": {"temperature": 0.7, "max_new_tokens": 500, "return_full_text": False}},
+    timeout=60
+)
+response.raise_for_status()
+simplified = response.json()[0]["generated_text"]
 
 # === Determine paper URL ===
 doi = paper.get("doi")
@@ -91,7 +97,7 @@ Published in journal: {journal_date}
 ### 🔗 [Read the full paper]({url})
 
 ### 🧪 Model Notes
-Simplified using `google/flan-t5-large`.
+Simplified using `{MODEL}` via Hugging Face Inference API.
 """
 
 # === Save post ===
