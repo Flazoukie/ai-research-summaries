@@ -66,14 +66,13 @@ abstract_clean = re.sub(r'\*\*', r'\\*\\*', abstract_clean)
 
 content = f"""
 ---
-title: "Paper of the Week"
+title: "AI Paper of the Week"
+subtitle: {title}
 date: {post_date}
 categories: ["{topic}"]
 ---
 
 ### Title: {title}
-
-### 🧠 Topic: {topic}
 
 Authors: {authors if authors else 'Unknown'}  
 Published in journal: {journal_date}  
