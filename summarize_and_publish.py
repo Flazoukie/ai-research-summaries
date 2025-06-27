@@ -70,13 +70,14 @@ else:
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
     "You are an expert science communicator who explains complex research clearly and simply.\n\n"
-    "Rewrite the following academic abstract entirely in your own words, creating a fresh, engaging, and complete explanation for a curious general audience.\n"
-    "Write a single, self-contained paragraph of 5 to 8 sentences (about 80 to 150 words) starting from the beginning of the topic.\n"
-    "Do NOT summarize or copy phrases from the original abstract.\n"
+    "Rewrite the following academic abstract completely in your own words, creating a fresh, engaging, and accurate explanation for a curious general audience.\n"
+    "Write a single, self-contained paragraph of 5 to 8 sentences (about 80 to 150 words).\n"
+    "Do NOT summarize, copy phrases, or reuse wording from the original abstract.\n"
     "Avoid technical jargon and explain ideas as if speaking to an interested teenager.\n"
-    "Use a friendly but professional tone, and write only in third person (no 'I' or 'we').\n"
-    "Do not include headings or labels.\n"
-    "At the end, add a brief sentence explaining why this research matters to everyday people or society.\n\n"
+    "Use a friendly but professional tone, writing only in the third person (no 'I', 'we', or 'our').\n"
+    "Do not include headings, labels, or meta references such as 'abstract' or 'original abstract'.\n"
+    "Focus on clarity, flow, and making the research accessible and relevant.\n"
+    "End with one sentence explaining why this research matters to everyday people or society.\n\n"
     "Here is the abstract:\n\n"
     f"{abstract_for_prompt}"
 )
@@ -88,9 +89,9 @@ response = requests.post(
         "inputs": prompt,
         "parameters": {
             "temperature": 0.35,
-            "top_p": 0.8,
-            "repetition_penalty": 1.2,
-            "do_sample": False,
+            "top_p": 0.85,
+            "repetition_penalty": 1.3,
+            "do_sample": True,
             "use_cache": False,
             "max_new_tokens": 300,
             "return_full_text": False
