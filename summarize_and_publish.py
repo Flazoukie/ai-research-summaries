@@ -31,12 +31,23 @@ post_date = datetime.date.today().isoformat()
 # === Generate simplified version ===
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
-    "Rewrite the following academic abstract into a short, engaging explanation for a curious non-expert.\n"
-    "Focus on clarity, simplicity, and relevance. Use 5–8 natural sentences in third person, like you're explaining it to an interested teenager.\n"
-    "Avoid jargon and unnecessary details. Do not include headings or labels like 'Summary' or 'Abstract'.\n\n"
-    "Abstract:\n"
+    "You are an expert science communicator who explains complex research clearly and simply.\n\n"
+    "Rewrite the following academic abstract into a brief, engaging explanation for a curious general audience.\n\n"
+    "Follow these guidelines carefully:\n"
+    "1. Begin by explaining the real-world problem or motivation behind the research in simple terms.\n"
+    "2. Describe what the researchers did to address the problem, in everyday language.\n"
+    "3. Summarize the key findings and why they matter.\n"
+    "4. Avoid technical jargon or complex terms; explain ideas as if speaking to an interested teenager.\n"
+    "5. Keep the explanation between 5 and 8 sentences, concise and easy to follow.\n"
+    "6. Use a natural, friendly tone but maintain professionalism.\n"
+    "7. Write only in third person (no 'I' or 'we').\n"
+    "8. Do not repeat ideas or phrases unnecessarily; be clear and to the point.\n"
+    "9. Do not include any headings, labels, or phrases like 'Summary:' or 'Abstract:'. Just provide the explanation.\n"
+    "10. Add a brief sentence about why this research matters to everyday people or society.\n\n"
+    "Here is the abstract to rewrite:\n\n"
     f"{abstract.strip()}"
 )
+
 
 response = requests.post(
     f"https://api-inference.huggingface.co/models/{MODEL}",
