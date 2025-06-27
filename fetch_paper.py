@@ -3,10 +3,8 @@ import datetime
 import random
 import json
 from pathlib import Path
-import re
 
 # === CONFIG ===
-TOPIC_ID = "https://openalex.org/C154945302"  # Artificial intelligence
 NUM_MONTHS = 6
 POSTS_DIR = Path("posts")
 
@@ -37,11 +35,11 @@ def already_published(doi):
     return False
 
 
-def fetch_papers_for_topic(topic_id):
+def fetch_papers():
     from_date = get_from_date()
     url = (
         f"https://api.openalex.org/works"
-        f"?filter=concepts.id:{topic_id},open_access.is_oa:true,from_publication_date:{from_date}"
+        f"?filter=abstract.search:artificial%20intelligence,open_access.is_oa:true,from_publication_date:{from_date}"
         f"&sort=publication_date:desc&per-page=20"
     )
     response = requests.get(url)
@@ -49,34 +47,18 @@ def fetch_papers_for_topic(topic_id):
     return response.json().get("results", [])
 
 
-def matches_ai_keywords(title, abstract):
-    title_lower = title.lower()
-    abstract_lower = abstract.lower()
-    return (
-        "artificial intelligence" in title_lower
-        or "artificial intelligence" in abstract_lower
-        or re.search(r"\bAI\b", title)
-        or re.search(r"\bAI\b", abstract)
-    )
-
-
 def main():
-    print(f"🔍 Fetching papers for topic: Artificial Intelligence")
+    print("🔍 Fetching papers for topic: Artificial Intelligence")
 
-    papers = fetch_papers_for_topic(TOPIC_ID)
+    papers = fetch_papers()
 
     valid_papers = []
     for p in papers:
         abstract = decode_abstract(p.get("abstract_inverted_index"))
         if not abstract or abstract.strip() == "":
             continue
-
-        if not matches_ai_keywords(p["title"], abstract):
-            continue
-
         if already_published(p.get("doi") or p["id"]):
             continue
-
         p["decoded_abstract"] = abstract
         valid_papers.append(p)
 
@@ -104,3 +86,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
