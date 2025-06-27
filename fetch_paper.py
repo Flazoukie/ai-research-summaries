@@ -25,16 +25,19 @@ def decode_abstract(index):
     return abstract
 
 
-def already_published(doi):
+def already_published(doi, title):
     if not POSTS_DIR.exists():
         return False
     for post_file in POSTS_DIR.glob("*.qmd"):
         content = post_file.read_text()
-        if doi in content:
+        if doi and doi in content:
             print(f"⚠️ Paper DOI {doi} already published in {post_file.name}")
             return True
+        if title and title in content:
+            print(f"⚠️ Paper title '{title}' already published in {post_file.name}")
+            return True
     return False
-
+    
 
 def fetch_papers():
     from_date = get_from_date()
@@ -51,6 +54,12 @@ def fetch_papers():
 def main():
     print("🔍 Fetching papers for topic: Artificial Intelligence")
 
+    # Remove old paper file before fetching new paper
+    paper_path = Path("paper_to_summarize.json")
+    if paper_path.exists():
+        paper_path.unlink()
+        print("🗑️ Removed old paper_to_summarize.json")
+
     papers = fetch_papers()
 
     valid_papers = []
@@ -58,7 +67,9 @@ def main():
         abstract = decode_abstract(p.get("abstract_inverted_index"))
         if not abstract or abstract.strip() == "":
             continue
-        if already_published(p.get("doi") or p["id"]):
+        doi = p.get("doi")
+        title = p.get("title")
+        if already_published(doi, title):
             continue
         p["decoded_abstract"] = abstract
         valid_papers.append(p)
@@ -79,7 +90,7 @@ def main():
         "authorships": selected.get("authorships", [])
     }
 
-    with open("paper_to_summarize.json", "w", encoding="utf-8") as f:
+    with open(paper_path, "w", encoding="utf-8") as f:
         json.dump(paper_data, f, ensure_ascii=False, indent=2)
 
     print(f"✅ Paper saved to paper_to_summarize.json: {paper_data['title']}")
