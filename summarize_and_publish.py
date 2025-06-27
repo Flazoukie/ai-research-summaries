@@ -31,18 +31,21 @@ simplifier = pipeline("text2text-generation", model="google/flan-t5-large")
 # === Generate simplified version ===
 print("🪄 Simplifying abstract...")
 prompt = (
-    "You are an expert science communicator. Your task is to rewrite the following academic abstract "
-    "as a short, clear, and engaging explanation for curious readers with no technical background.\n\n"
-    "Write in a natural, human tone as if speaking to a smart teenager. Focus on clarity and flow.\n\n"
-    "Your explanation should:\n"
-    "- Start by describing the real-world problem being addressed.\n"
-    "- Explain what the researchers did to tackle it.\n"
-    "- Summarize what they discovered and why it matters.\n"
-    "- Avoid jargon and break down any complex ideas.\n"
-    "- Use 5–8 smooth, vivid sentences in third person (never 'we' or 'I').\n"
-    "- Do not include section headers or labels like 'Summary' or 'Abstract'. Just write the summary itself.\n\n"
-    f"{abstract}"
+    "You are a science writer skilled at explaining complex ideas to curious non-experts.\n\n"
+    "Your task is to rewrite the following academic abstract into a short, engaging, and easy-to-understand explanation for a general audience.\n\n"
+    "Follow these rules:\n"
+    "1. Start by explaining the real-world problem or motivation behind the research.\n"
+    "2. Then describe what the researchers did to study or solve it.\n"
+    "3. Clearly summarize what they found and why it matters.\n"
+    "4. Avoid academic language or technical jargon — explain everything in everyday words.\n"
+    "5. Write in 5–8 flowing, complete sentences. Use a natural tone — like explaining it to an interested teenager.\n"
+    "6. Use third person only (no 'we' or 'I').\n"
+    "7. Skip unnecessary details like exact sample sizes or long lists, unless they are crucial.\n"
+    "8. Do NOT include any section titles like 'Summary:' or 'Abstract:'. Just write the explanation.\n\n"
+    "Here is the abstract to rewrite:\n\n"
+    f"{abstract.strip()}"
 )
+
 
 simplified = simplifier(prompt, max_length=1000, do_sample=True, temperature=0.7)[0]['generated_text']
 
