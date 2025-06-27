@@ -3,18 +3,17 @@ import datetime
 import random
 import json
 from pathlib import Path
+import html
+import re
 
-# === CONFIG ===
 # === CONFIG ===
 NUM_MONTHS = 6
 POSTS_DIR = Path("data-blog/posts")  
-
 
 def get_from_date():
     today = datetime.date.today()
     from_date = today - datetime.timedelta(days=NUM_MONTHS * 30)
     return from_date.isoformat()
-
 
 def decode_abstract(index):
     if index is None:
@@ -24,6 +23,11 @@ def decode_abstract(index):
     abstract = " ".join(word for pos, word in words_with_pos)
     return abstract
 
+def clean_abstract(raw_text):
+    """Unescape HTML entities and remove HTML tags from the abstract text."""
+    unescaped = html.unescape(raw_text)
+    plain = re.sub(r"<.*?>", "", unescaped)
+    return plain.strip()
 
 def already_published(doi, title):
     if not POSTS_DIR.exists():
@@ -38,7 +42,6 @@ def already_published(doi, title):
             return True
     return False
     
-
 def fetch_papers():
     from_date = get_from_date()
     url = (
@@ -49,7 +52,6 @@ def fetch_papers():
     response = requests.get(url)
     response.raise_for_status()
     return response.json().get("results", [])
-
 
 def main():
     print("🔍 Fetching papers for topic: Artificial Intelligence")
@@ -67,6 +69,7 @@ def main():
         abstract = decode_abstract(p.get("abstract_inverted_index"))
         if not abstract or abstract.strip() == "":
             continue
+        abstract = clean_abstract(abstract)  # Clean here!
         doi = p.get("doi")
         title = p.get("title")
         if already_published(doi, title):
@@ -95,7 +98,7 @@ def main():
 
     print(f"✅ Paper saved to paper_to_summarize.json: {paper_data['title']}")
 
-
 if __name__ == "__main__":
     main()
+
 
