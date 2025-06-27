@@ -82,6 +82,7 @@ def main():
             "id": selected["id"],
             "publication_date": selected.get("publication_date"),
             "topic": topic["name"],
+            "authorships": selected.get("authorships", [])
         }
 
         # Save to JSON for next step
