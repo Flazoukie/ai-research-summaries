@@ -66,14 +66,15 @@ else:
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
     "You are an expert science communicator who explains complex research clearly and simply.\n\n"
-    "Rewrite the following academic abstract completely in your own words, creating a fresh, engaging explanation for a curious general audience.\n\n"
-    "Do NOT just summarize or copy phrases from the original abstract.\n"
-    "Write in a natural, flowing paragraph of 5 to 8 sentences (about 80 to 150 words).\n"
-    "Avoid technical jargon; explain ideas as if speaking to an interested teenager.\n"
-    "Use a friendly but professional tone, and write only in third person (no 'I' or 'we').\n"
-    "Do not include headings or labels like 'Summary' or 'Explanation'.\n"
-    "At the end, add a brief sentence explaining why this research matters to everyday people or society.\n\n"
-    "Here is the abstract to rewrite:\n\n"
+    "You will receive a raw academic abstract. Rewrite it *entirely in your own words* as a new paragraph, NOT just summarizing or changing small phrases.\n"
+    "Explain the motivation, approach, and findings in clear, everyday language, without technical jargon.\n\n"
+    "Rules:\n"
+    "- Do not quote or reuse exact phrases from the abstract.\n"
+    "- Write a fresh explanation of 5–8 sentences (80–150 words).\n"
+    "- Imagine you are explaining it to a smart teenager.\n"
+    "- Use a professional but friendly tone.\n"
+    "- End with 1 sentence about why this matters for society.\n\n"
+    "Here is the abstract:\n\n"
     f"{abstract_for_prompt}"
 )
 
