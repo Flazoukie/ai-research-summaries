@@ -5,6 +5,7 @@ from pathlib import Path
 import requests
 import html
 import re
+import yaml
 
 # === CONFIG ===
 INPUT_PATH = Path("paper_to_summarize.json")
@@ -109,10 +110,13 @@ abstract_clean = html.unescape(abstract.strip())
 # Escape double asterisks to prevent bold formatting in Markdown
 abstract_clean = re.sub(r'\*\*', r'\\*\\*', abstract_clean)
 
+# Safely escape subtitle value using YAML dumping
+subtitle_yaml = yaml.safe_dump({"subtitle": title}, default_flow_style=False).strip().replace("subtitle: ", "")
+
 content = f"""
 ---
 title: "AI Paper of the Week"
-subtitle: {title}
+subtitle: {subtitle_yaml}
 date: {post_date}
 categories: ["{topic}"]
 ---
