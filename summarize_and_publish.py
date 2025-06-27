@@ -31,18 +31,10 @@ post_date = datetime.date.today().isoformat()
 # === Generate simplified version ===
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
-    "You are a science writer skilled at explaining complex ideas to curious non-experts.\n\n"
-    "Your task is to rewrite the following academic abstract into a short, engaging, and easy-to-understand explanation for a general audience.\n\n"
-    "Follow these rules:\n"
-    "1. Start by explaining the real-world problem or motivation behind the research.\n"
-    "2. Then describe what the researchers did to study or solve it.\n"
-    "3. Clearly summarize what they found and why it matters.\n"
-    "4. Avoid academic language or technical jargon — explain everything in everyday words.\n"
-    "5. Write in 5–8 flowing, complete sentences. Use a natural tone — like explaining it to an interested teenager.\n"
-    "6. Use third person only (no 'we' or 'I').\n"
-    "7. Skip unnecessary details like exact sample sizes or long lists, unless they are crucial.\n"
-    "8. Do NOT include any section titles like 'Summary:' or 'Abstract:'. Just write the explanation.\n\n"
-    "Here is the abstract to rewrite:\n\n"
+    "Rewrite the following academic abstract into a short, engaging explanation for a curious non-expert.\n"
+    "Focus on clarity, simplicity, and relevance. Use 5–8 natural sentences in third person, like you're explaining it to an interested teenager.\n"
+    "Avoid jargon and unnecessary details. Do not include headings or labels like 'Summary' or 'Abstract'.\n\n"
+    "Abstract:\n"
     f"{abstract.strip()}"
 )
 
