@@ -68,14 +68,17 @@ def main():
     valid_papers = []
     for p in papers:
         abstract = decode_abstract(p.get("abstract_inverted_index"))
-        if (
-            abstract
-            and abstract.strip() != ""
-            and not already_published(p.get("doi") or p["id"])
-            and matches_ai_keywords(p["title"], abstract)
-        ):
-            p["decoded_abstract"] = abstract
-            valid_papers.append(p)
+        if not abstract or abstract.strip() == "":
+            continue
+
+        if not matches_ai_keywords(p["title"], abstract):
+            continue
+
+        if already_published(p.get("doi") or p["id"]):
+            continue
+
+        p["decoded_abstract"] = abstract
+        valid_papers.append(p)
 
     if not valid_papers:
         print("❌ No matching papers found.")
@@ -101,4 +104,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
