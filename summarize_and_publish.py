@@ -100,25 +100,21 @@ simplified = response.json()[0]["generated_text"]
 doi = paper.get("doi")
 url = f"https://doi.org/{doi}" if doi else paper["id"].replace("https://openalex.org/", "https://doi.org/")
 
-# === Generate post content ===
-slug = f"{post_date}-ai-summary"
-post_path = POSTS_DIR / f"{slug}.qmd"
-
-# Clean up abstract HTML entities (e.g. &lt;, &gt;, &amp;)
+# === Clean up abstract text ===
 abstract_clean = html.unescape(abstract.strip())
-
-# Escape double asterisks to prevent bold formatting in Markdown
 abstract_clean = re.sub(r'\*\*', r'\\*\\*', abstract_clean)
 
-# Safely escape subtitle value using YAML dumping
-subtitle_yaml = yaml.safe_dump({"subtitle": title}, default_flow_style=False).strip().replace("subtitle: ", "")
+# === YAML front matter ===
+front_matter = yaml.safe_dump({
+    "title": "AI Paper of the Week",
+    "subtitle": title,
+    "date": post_date,
+    "categories": [topic]
+}, sort_keys=False).strip()
 
-content = f"""
----
-title: "AI Paper of the Week"
-subtitle: {subtitle_yaml}
-date: {post_date}
-categories: ["{topic}"]
+# === Final post content ===
+content = f"""---
+{front_matter}
 ---
 
 ### Title: {title}
@@ -145,6 +141,8 @@ Simplified using `{MODEL}` via Hugging Face Inference API.
 """
 
 # === Save post ===
+slug = f"{post_date}-ai-summary"
+post_path = POSTS_DIR / f"{slug}.qmd"
 post_path.write_text(content.strip())
-print(f"✅ Blog post created at {post_path}")
 
+print(f"✅ Blog post created at {post_path}")
