@@ -5,15 +5,7 @@ import json
 from pathlib import Path
 
 # === CONFIG ===
-TOPICS = [
-    "https://openalex.org/C154945302",  # Artificial intelligence
-    "https://openalex.org/C119857082",  # Machine learning
-    "https://openalex.org/C204321447",  # Natural language processing
-    "https://openalex.org/C2522767166",  # Data science
-    "https://openalex.org/C107457646",  # Human–computer interaction
-    "https://openalex.org/C31972630",   # Computer vision
-]
-
+TOPIC_ID = "https://openalex.org/C154945302"  # Artificial intelligence
 NUM_MONTHS = 6
 POSTS_DIR = Path("posts")
 
@@ -56,55 +48,53 @@ def fetch_papers_for_topic(topic_id):
     return response.json().get("results", [])
 
 
-def get_display_topic(concepts):
-    for c in concepts:
-        if c["id"] in TOPICS:
-            return c["display_name"]
-    return None
+def matches_ai_keywords(title, abstract):
+    return (
+        "artificial intelligence" in title.lower()
+        or "artificial intelligence" in abstract.lower()
+        or "AI" in title
+        or "AI" in abstract
+    )
 
 
 def main():
-    for topic_id in TOPICS:
-        print(f"🔍 Trying topic: {topic_id}")
+    print(f"🔍 Fetching papers for topic: Artificial Intelligence")
 
-        papers = fetch_papers_for_topic(topic_id)
+    papers = fetch_papers_for_topic(TOPIC_ID)
 
-        # Filter papers that have abstract_inverted_index and are not published
-        valid_papers = []
-        for p in papers:
-            abstract = decode_abstract(p.get("abstract_inverted_index"))
-            if abstract is not None and abstract.strip() != "" and not already_published(p.get("doi") or p["id"]):
-                p["decoded_abstract"] = abstract
-                valid_papers.append(p)
+    valid_papers = []
+    for p in papers:
+        abstract = decode_abstract(p.get("abstract_inverted_index"))
+        if (
+            abstract
+            and abstract.strip() != ""
+            and not already_published(p.get("doi") or p["id"])
+            and matches_ai_keywords(p["title"], abstract)
+        ):
+            p["decoded_abstract"] = abstract
+            valid_papers.append(p)
 
-        if not valid_papers:
-            print(f"⚠️ No valid papers with abstracts found for topic '{topic_id}', trying next.")
-            continue
+    if not valid_papers:
+        print("❌ No matching papers found.")
+        return
 
-        selected = random.choice(valid_papers)
-        display_topic = get_display_topic(selected.get("concepts", []))
+    selected = random.choice(valid_papers)
 
-        paper_data = {
-            "title": selected["title"],
-            "abstract": selected["decoded_abstract"],
-            "doi": selected.get("doi"),
-            "id": selected["id"],
-            "publication_date": selected.get("publication_date"),
-            "topic": display_topic or "Unknown",
-            "authorships": selected.get("authorships", [])
-        }
+    paper_data = {
+        "title": selected["title"],
+        "abstract": selected["decoded_abstract"],
+        "doi": selected.get("doi"),
+        "id": selected["id"],
+        "publication_date": selected.get("publication_date"),
+        "topic": "Artificial Intelligence",
+        "authorships": selected.get("authorships", [])
+    }
 
-        # Save to JSON for next step
-        with open("paper_to_summarize.json", "w", encoding="utf-8") as f:
-            json.dump(paper_data, f, ensure_ascii=False, indent=2)
+    with open("paper_to_summarize.json", "w", encoding="utf-8") as f:
+        json.dump(paper_data, f, ensure_ascii=False, indent=2)
 
-        print(f"✅ Paper saved to paper_to_summarize.json for topic '{display_topic}': {paper_data['title']}")
-        return  # stop after first valid paper found
-
-    print("❌ No new valid papers found for any topic.")
+    print(f"✅ Paper saved to paper_to_summarize.json: {paper_data['title']}")
 
 
 if __name__ == "__main__":
     main()
-
-
