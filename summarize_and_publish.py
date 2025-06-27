@@ -42,10 +42,11 @@ def summarize_text(text):
         json={
             "inputs": summary_prompt,
             "parameters": {
-                "temperature": 0.4,
+                "temperature": 0.35,
                 "max_new_tokens": 400,
-                "top_p": 0.9,
-                "repetition_penalty": 1.1,
+                "top_p": 0.8,
+                "do_sample": False,
+                "repetition_penalty": 1.2,
                 "return_full_text": False,
                 "use_cache": False 
             }
@@ -87,11 +88,12 @@ response = requests.post(
         "inputs": prompt,
         "parameters": {
             "temperature": 0.35,
-            "max_new_tokens": 250,
-            "top_p": 0.9,
-            "repetition_penalty": 1.1,
-            "return_full_text": False,
-            "use_cache": False
+            "top_p": 0.8,
+            "repetition_penalty": 1.2,
+            "do_sample": False,
+            "use_cache": False,
+            "max_new_tokens": 300,
+            "return_full_text": False
         }
     },
     timeout=60
