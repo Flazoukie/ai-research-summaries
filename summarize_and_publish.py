@@ -48,13 +48,22 @@ prompt = (
     f"{abstract.strip()}"
 )
 
-
 response = requests.post(
     f"https://api-inference.huggingface.co/models/{MODEL}",
     headers={"Authorization": f"Bearer {HF_API_TOKEN}"},
-    json={"inputs": prompt, "parameters": {"temperature": 0.7, "max_new_tokens": 500, "return_full_text": False}},
+    json={
+        "inputs": prompt,
+        "parameters": {
+            "temperature": 0.35,
+            "max_new_tokens": 250,
+            "top_p": 0.9,
+            "repetition_penalty": 1.1,
+            "return_full_text": False
+        }
+    },
     timeout=60
 )
+
 response.raise_for_status()
 simplified = response.json()[0]["generated_text"]
 
