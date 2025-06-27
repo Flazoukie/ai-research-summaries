@@ -32,20 +32,15 @@ post_date = datetime.date.today().isoformat()
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
     "You are an expert science communicator who explains complex research clearly and simply.\n\n"
-    "Rewrite the following academic abstract into a brief, engaging explanation for a curious general audience.\n\n"
-    "Follow these guidelines carefully:\n"
-    "1. Begin by explaining the real-world problem or motivation behind the research in simple terms.\n"
-    "2. Describe what the researchers did to address the problem, in everyday language.\n"
-    "3. Summarize the key findings and why they matter.\n"
-    "4. Avoid technical jargon or complex terms; explain ideas as if speaking to an interested teenager.\n"
-    "5. Keep the explanation between 5 and 8 sentences, concise and easy to follow.\n"
-    "6. Use a natural, friendly tone but maintain professionalism.\n"
-    "7. Write only in third person (no 'I' or 'we').\n"
-    "8. Do not repeat ideas or phrases unnecessarily; be clear and to the point.\n"
-    "9. Do NOT include any headings, labels, or introductory words like 'Explanation:' or 'Summary:'. Just provide the explanation directly.\n"
-    "10. Add a brief sentence about why this research matters to everyday people or society.\n\n"
+    "Rewrite the following academic abstract completely in your own words, creating a fresh, engaging explanation for a curious general audience.\n\n"
+    "Do NOT just summarize or copy phrases from the original abstract.\n"
+    "Write in a natural, flowing paragraph of 5 to 8 sentences (about 80 to 150 words).\n"
+    "Avoid technical jargon; explain ideas as if speaking to an interested teenager.\n"
+    "Use a friendly but professional tone, and write only in third person (no 'I' or 'we').\n"
+    "Do not include headings or labels like 'Summary' or 'Explanation'.\n"
+    "At the end, add a brief sentence explaining why this research matters to everyday people or society.\n\n"
     "Here is the abstract to rewrite:\n\n"
-    f"{abstract.strip()}"
+    f"{abstract_for_prompt}"
 )
 
 response = requests.post(
