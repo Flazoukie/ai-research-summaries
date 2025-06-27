@@ -46,7 +46,8 @@ def summarize_text(text):
                 "max_new_tokens": 400,
                 "top_p": 0.9,
                 "repetition_penalty": 1.1,
-                "return_full_text": False
+                "return_full_text": False,
+                "use_cache": False 
             }
         },
         timeout=60
@@ -89,7 +90,8 @@ response = requests.post(
             "max_new_tokens": 250,
             "top_p": 0.9,
             "repetition_penalty": 1.1,
-            "return_full_text": False
+            "return_full_text": False,
+            "use_cache": False
         }
     },
     timeout=60
