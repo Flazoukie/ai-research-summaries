@@ -69,16 +69,13 @@ else:
 # === Generate simplified version ===
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
-    "You are an expert science communicator who explains complex academic research clearly and simply.\n\n"
-    "Rewrite the following academic abstract entirely in your own words for a curious general audience.\n"
-    "Write a single paragraph of 5–8 sentences (around 80–150 words) in a friendly but professional tone.\n"
-    "Avoid technical jargon, and explain the core ideas clearly and accurately, as if speaking to a smart teenager.\n"
-    "You MUST stay faithful to the original content. Do NOT invent examples, applications, or claims that are not present.\n"
-    "Rephrase and clarify ideas, but do NOT add anything not grounded in the abstract.\n"
-    "Write in the third person only (no 'I', 'we', 'our').\n"
-    "Avoid using the words 'abstract', 'original abstract', or meta language.\n"
-    "End with one sentence explaining why this research matters to everyday people or society.\n\n"
-    "Here is the abstract:\n\n"
+    "You are an expert science communicator. Your task is to rewrite the following academic abstract for an intelligent general audience.\n\n"
+    "Rephrase the text in a clear, engaging, and simple way, while staying fully faithful to the original content.\n"
+    "Use your own words, avoid jargon, and do not add information that is not explicitly present in the original.\n"
+    "Write one paragraph of 5 to 8 sentences, in third person, without using the words 'abstract', 'original', or meta-commentary.\n"
+    "Use a neutral, friendly tone and explain the ideas as if to a curious teenager.\n"
+    "Conclude with a sentence explaining why this research matters to society.\n\n"
+    "Text to simplify:\n\n"
     f"{abstract_for_prompt}"
 )
 
@@ -88,9 +85,9 @@ response = requests.post(
     json={
         "inputs": prompt,
         "parameters": {
-            "temperature": 0.3,
-            "top_p": 0.7,
-            "repetition_penalty": 1.1,
+            "temperature": 0.35,
+            "top_p": 0.85,
+            "repetition_penalty": 1.15,
             "do_sample": False,
             "use_cache": False,
             "max_new_tokens": 300,
