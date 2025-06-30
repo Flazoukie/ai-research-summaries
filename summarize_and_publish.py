@@ -69,13 +69,17 @@ else:
 # === Generate simplified version ===
 print("🪄 Simplifying abstract using Hugging Face API...")
 prompt = (
-    "You are an expert science communicator. Your task is to rewrite the following academic abstract for an intelligent general audience.\n\n"
-    "Rephrase the text in a clear, engaging, and simple way, while staying fully faithful to the original content.\n"
-    "Use your own words, avoid jargon, and do not add information that is not explicitly present in the original.\n"
-    "Write one paragraph of 5 to 8 sentences, in third person, without using the words 'abstract', 'original', or meta-commentary.\n"
-    "Use a neutral, friendly tone and explain the ideas as if to a curious teenager.\n"
-    "Conclude with a sentence explaining why this research matters to society.\n\n"
-    "Text to simplify:\n\n"
+    "You are an expert AI communicator. Your goal is to rewrite a complex academic abstract for a "
+    "tech-savvy but non-expert audience, like a curious student or a journalist.\n\n"
+    "Follow these instructions precisely:\n"
+    "1. Rewrite the abstract into a single, cohesive paragraph between 5 and 8 sentences.\n"
+    "2. Start by explaining the core problem the researchers are trying to solve.\n"
+    "3. Clearly describe their unique method or solution.\n"
+    "4. Mention the key result or finding.\n"
+    "5. The final sentence MUST explain the real-world importance or potential impact of this research.\n"
+    "6. Use simple, engaging language. Avoid jargon or explain it in the simplest terms.\n"
+    "7. Do not add any information not present in the original text. Do not use phrases like 'This paper...' or 'The abstract describes...'.\n\n"
+    "--- ABSTRACT TO SIMPLIFY ---\n"
     f"{abstract_for_prompt}"
 )
 
