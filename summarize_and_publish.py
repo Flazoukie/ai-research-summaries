@@ -39,18 +39,7 @@ def summarize_text(text):
     response = requests.post(
         f"https://api-inference.huggingface.co/models/{MODEL}",
         headers={"Authorization": f"Bearer {HF_API_TOKEN}"},
-        json={
-            "inputs": summary_prompt,
-            "parameters": {
-                "temperature": 0.35,
-                "max_new_tokens": 400,
-                "top_p": 0.8,
-                "do_sample": False,
-                "repetition_penalty": 1.2,
-                "return_full_text": False,
-                "use_cache": False 
-            }
-        },
+        json={"inputs": summary_prompt},  # 👈 simplified!
         timeout=60
     )
     response.raise_for_status()
@@ -58,13 +47,8 @@ def summarize_text(text):
     if isinstance(result, dict) and "error" in result:
         print(f"API Error during summarization: {result['error']}")
         return text  # fallback to original abstract if error
-    return result[0].get("generated_text", text).strip()
+    return result[0].get("summary_text", text).strip()
 
-# Use original abstract if short enough, else summarize first
-if len(abstract) > MAX_ABSTRACT_LENGTH:
-    abstract_for_prompt = summarize_text(abstract)
-else:
-    abstract_for_prompt = abstract.strip()
 
 # === Generate simplified version ===
 print("🪄 Simplifying abstract using Hugging Face API...")
