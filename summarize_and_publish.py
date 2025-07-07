@@ -12,7 +12,7 @@ INPUT_PATH = Path("paper_to_summarize.json")
 POSTS_DIR = Path("data-blog/posts")
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
 HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-MODEL = "mistralai/Mistral-7B-Instruct-v0.2"  
+MODEL = "tiiuae/falcon-7b-instruct"  
 MAX_ABSTRACT_LENGTH = 1500  # threshold for abstract length
 
 # === Load paper ===
