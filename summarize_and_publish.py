@@ -12,7 +12,7 @@ INPUT_PATH = Path("paper_to_summarize.json")
 POSTS_DIR = Path("data-blog/posts")
 POSTS_DIR.mkdir(parents=True, exist_ok=True)
 HF_API_TOKEN = os.getenv("HF_API_TOKEN")
-MODEL = "google/flan-t5-xl"  
+MODEL = "facebook/bart-large-cnn"  
 MAX_ABSTRACT_LENGTH = 1500  # threshold for abstract length
 
 # === Load paper ===
